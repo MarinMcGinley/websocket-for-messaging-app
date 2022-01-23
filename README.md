@@ -19,3 +19,10 @@ Add dependency to API project (in API): `dotnet add reference ../Infrastructure`
 Add dependency to Core (in Infrastructure): `dotnet add reference ../Core`
 
 Make references available in our solution (in root): `dotnet restore`
+
+Drop old db (in root): `dotnet ef database drop -p Infrastructure -s API`
+
+Remove migrations (in root): `dotnet ef migrations remove -p Infrastructure -s API`
+
+Add new migrations (in root): `dotnet ef migrations add InitialCreate -p Infrastructure -s API -o Data/Migrations`
+

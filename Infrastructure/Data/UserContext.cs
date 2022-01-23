@@ -1,3 +1,4 @@
+using System.Reflection;
 using Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,5 +11,11 @@ namespace Infrastructure.Data
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<Friend> Friends { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder) {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        }
     }
 }

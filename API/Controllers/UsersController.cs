@@ -1,8 +1,6 @@
-using System.Linq;
 using Core.Entities;
-using Infrastructure.Data;
+using Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -10,16 +8,16 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
-        private readonly UserContext _context;
-        public UsersController(UserContext context)
+        private readonly IUserRepository _repo;
+        public UsersController(IUserRepository repo)
         {
-            _context = context;
+            _repo = repo;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<User>>> GetUsers()
         {
-            var users = await _context.Users.ToListAsync();
+            var users = await _repo.GetUsersAsync();
 
             return Ok(users);
         }
@@ -28,11 +26,12 @@ namespace API.Controllers
 
         public async Task<ActionResult<User>> GetUser(int id)
         {
-            return await _context.Users.FindAsync(id);
+            return await _repo.GetUserByIdAsync(id);
         }
 
         [HttpGet("email/{email}")]
-        public string GetUserFromEmail(string email) {
+        public string GetUserFromEmail(string email)
+        {
             return "User with particular email";
         }
 
