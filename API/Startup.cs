@@ -2,6 +2,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.Data;
 using Core.Interfaces;
+using API.Helpers;
 
 namespace API
 {
@@ -16,9 +17,8 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IMessageRepository, MessageRepository>();
-            services.AddScoped<IFriendRepository, FriendRepository>();
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddAutoMapper(typeof(MappingProfiles));
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
