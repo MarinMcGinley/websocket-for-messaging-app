@@ -7,9 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class FriendsController : ControllerBase
+    public class FriendsController : BaseApiController
     {
         private readonly IGenericRepository<Friend> _repo;
         private readonly IMapper _mapper;

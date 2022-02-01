@@ -1,4 +1,5 @@
 using API.Dtos;
+using API.Errors;
 using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
@@ -7,9 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    public class UsersController : BaseApiController
     {
         private readonly IGenericRepository<User> _repo;
         private readonly IMapper _mapper;
@@ -33,6 +32,8 @@ namespace API.Controllers
         {
             var user = await _repo.GetByIdAsync(id);
 
+            if (user == null) return NotFound(new ApiResponse(404));
+
             return Ok(_mapper.Map<User, UserToReturnDto>(user));
         }
 
@@ -41,6 +42,8 @@ namespace API.Controllers
         {
             var spec = new UsersFromEmailSpecification(email);
             var user = await _repo.GetEntityWithSpec(spec);
+
+            if (user == null) return NotFound(new ApiResponse(404));
 
             return Ok(_mapper.Map<User, UserToReturnDto>(user));
 
