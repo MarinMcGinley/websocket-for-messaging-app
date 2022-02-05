@@ -18,9 +18,9 @@ namespace API.Controllers
         }
 
         [HttpGet("{userId}/{friendId}")]
-        public async Task<ActionResult<IReadOnlyList<MessageToReturnDto>>> GetMessagesBetweenFriends(int userId, int friendId)
+        public async Task<ActionResult<IReadOnlyList<MessageToReturnDto>>> GetMessagesBetweenFriends(int userId, int friendId, [FromQuery]BaseSpecParams messagesSpecParams)
         {
-            var spec = new MessagesBetweenFriendsSpecification(userId, friendId);
+            var spec = new MessagesBetweenFriendsSpecification(userId, friendId, messagesSpecParams);
             var messages = await _repo.ListAsync(spec);
 
             return Ok(_mapper.Map<IReadOnlyList<Message>, IReadOnlyList<MessageToReturnDto>>(messages));

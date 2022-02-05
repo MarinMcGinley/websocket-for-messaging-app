@@ -15,6 +15,11 @@ namespace Infrastructure.Data
 
             query = spec.OrderBys.Aggregate(query, (current, orderBy) => current.OrderBy(orderBy));
             query = spec.OrderBysDesc.Aggregate(query, (current, orderBy) => current.OrderByDescending(orderBy));
+
+            if (spec.IsPagingEnabled) {
+                query = query.Skip(spec.Skip).Take(spec.Take);
+            }
+            
             query = spec.Includes.Aggregate(query, (current, include) => current.Include(include));
 
             return query;

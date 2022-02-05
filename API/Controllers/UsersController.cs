@@ -19,9 +19,10 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<UserToReturnDto>>> GetUsers()
+        public async Task<ActionResult<IReadOnlyList<UserToReturnDto>>> GetUsers([FromQuery]UserSpecParams userSpecParams)
         {
-            var users = await _repo.ListAllAsync();
+            var spec = new UsersPaginatedSpecification(userSpecParams);
+            var users = await _repo.ListAsync(spec);
 
             return Ok(_mapper.Map<IReadOnlyList<User>, IReadOnlyList<UserToReturnDto>>(users));
         }
@@ -49,10 +50,10 @@ namespace API.Controllers
 
         }
 
-        [HttpGet("find/{searchString}")]
-        public async Task<ActionResult<IReadOnlyList<UserToReturnDto>>> FindUsers(string searchString)
+        [HttpGet("find")]
+        public async Task<ActionResult<IReadOnlyList<UserToReturnDto>>> FindUsers([FromQuery]UserSpecParams userSpecParams)
         {
-            var spec = new UsersFromSearchStringSpecification(searchString);
+            var spec = new UsersFromSearchStringSpecification(userSpecParams);
             var users = await _repo.ListAsync(spec);
 
             return Ok(_mapper.Map<IReadOnlyList<User>, IReadOnlyList<UserToReturnDto>>(users));
