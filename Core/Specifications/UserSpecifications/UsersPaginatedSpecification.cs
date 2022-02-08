@@ -5,7 +5,7 @@ namespace Core.Specifications
 {
     public class UsersPaginatedSpecification : BaseSpecification<User>
     {
-        public UsersPaginatedSpecification(UserSpecParams userParams): base() {
+        public UsersPaginatedSpecification(BaseSpecParams userParams): base() {
             AddOrderBy(user => user.Name);
             ApplyPaging(userParams.PageSize * (userParams.PageIndex - 1), userParams.PageSize);
         }

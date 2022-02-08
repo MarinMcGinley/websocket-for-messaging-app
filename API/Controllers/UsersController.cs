@@ -19,7 +19,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<UserToReturnDto>>> GetUsers([FromQuery]UserSpecParams userSpecParams)
+        public async Task<ActionResult<IReadOnlyList<UserToReturnDto>>> GetUsers([FromQuery]BaseSpecParams userSpecParams)
         {
             var spec = new UsersPaginatedSpecification(userSpecParams);
             var users = await _repo.ListAsync(spec);
@@ -61,9 +61,10 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public string CreateUser()
+        public async Task<ActionResult<int>> CreateUser(User user)
         {
-            return "User created";
+            await _repo.CreateEntity(user);
+            return Ok();
         }
 
     }

@@ -18,12 +18,24 @@ namespace API.Controllers
         }
 
         [HttpGet("{userId}")]
-        public async Task<ActionResult<IReadOnlyList<FriendToReturnDto>>> GetFriends(int userId, [FromQuery]BaseSpecParams friendsSpecParams)
+        public async Task<ActionResult<IReadOnlyList<FriendToReturnDto>>> GetFriends(int userId, [FromQuery] BaseSpecParams friendsSpecParams)
         {
             var spec = new FriendsWithUsersSpecification(userId, friendsSpecParams);
             var friends = await _repo.ListAsync(spec);
 
             return Ok(_mapper.Map<IReadOnlyList<Friend>, IReadOnlyList<FriendToReturnDto>>(friends));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<int>> CreateFriend(Friend friend)
+        {
+            await _repo.CreateEntity(friend);
+            await _repo.CreateEntity(new Friend
+            {
+                UserId = friend.FriendUserId,
+                FriendUserId = friend.UserId
+            });
+            return Ok();
         }
     }
 }

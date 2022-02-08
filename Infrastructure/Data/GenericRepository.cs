@@ -13,9 +13,10 @@ namespace Infrastructure.Data
             _context = context;
         }
 
-        public async Task<int> CountAsync(ISpecification<T> spec)
+        public async Task<int> CreateEntity(T entity)
         {
-            return await ApplySpecification(spec).CountAsync();
+            await _context.AddAsync<T>(entity);
+            return _context.SaveChanges();
         }
 
         public async Task<T> GetByIdAsync(int id)

@@ -26,4 +26,6 @@ Remove migrations (in root): `dotnet ef migrations remove -p Infrastructure -s A
 
 Add new migrations (in root): `dotnet ef migrations add InitialCreate -p Infrastructure -s API -o Data/Migrations`
 
-komin á 54 -> error handling
+https://docs.microsoft.com/en-us/aspnet/core/security/authorization/secure-data?view=aspnetcore-6.0
+
+https://www.youtube.com/watch?v=3PyUjOmuFic
