@@ -29,3 +29,5 @@ Add new migrations (in root): `dotnet ef migrations add InitialCreate -p Infrast
 https://docs.microsoft.com/en-us/aspnet/core/security/authorization/secure-data?view=aspnetcore-6.0
 
 https://www.youtube.com/watch?v=3PyUjOmuFic
+
+websocket: https://www.youtube.com/watch?v=ycVgXe6v1VQ -> 1:42:00

@@ -43,6 +43,15 @@ namespace API
             app.UseCors("CorsPolicy");
             app.UseAuthorization();
 
+            // var webSocketOptions = new WebSocketOptions();
+            var webSocketOptions = new WebSocketOptions() 
+            {
+                KeepAliveInterval = TimeSpan.FromSeconds(120),
+            };
+            webSocketOptions.AllowedOrigins.Add("https://localhost:5001");
+
+            app.UseWebSockets(webSocketOptions);
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

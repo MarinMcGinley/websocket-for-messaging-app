@@ -6,7 +6,6 @@ namespace API.Errors
         {
             StatusCode = statusCode;
             Message = message ?? GetDefaultMessageForStatusCode(statusCode);
-
         }
 
         public int StatusCode { get; set; }
