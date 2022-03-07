@@ -29,3 +29,11 @@ Add new migrations (in root): `dotnet ef migrations add InitialCreate -p Infrast
 https://docs.microsoft.com/en-us/aspnet/core/security/authorization/secure-data?view=aspnetcore-6.0
 
 https://www.youtube.com/watch?v=3PyUjOmuFic
+
+hvernig á ég að route-a request-inu? (búa til controller?)
+
+`dotnet watch run`
+
+
+postman is not triggering my methods -> 
+    action: continue programming blindly and create javascript client to connect

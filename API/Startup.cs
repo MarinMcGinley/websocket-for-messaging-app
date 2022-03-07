@@ -3,6 +3,8 @@ using Infrastructure.Data;
 using API.Helpers;
 using API.Middleware;
 using API.Extensions;
+using API.Hubs;
+using System;
 
 namespace API
 {
@@ -24,10 +26,11 @@ namespace API
             services.AddDbContext<UserContext>(x => x.UseSqlite(_config.GetConnectionString("DefaultConnection")));
             services.AddCors(opt => {
                 opt.AddPolicy("CorsPolicy", policy => {
-                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:5001");
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:5001", "null"); // ATT!! remove null before production
                 });
             });
-        }
+            services.AddSignalR();
+        }        
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -46,7 +49,15 @@ namespace API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<MessagingHub>("/messaginghub");
+
             });
+
+            // app.UseSignalR(endpoints => {
+            //     endpoints.MapHub<MessagingHub>("/messaginghub");
+            // });
+
+            // app.MapHub<MessagingHub>("/messaginghub");
         }
     }
 }
