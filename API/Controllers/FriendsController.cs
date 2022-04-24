@@ -11,15 +11,18 @@ namespace API.Controllers
     {
         private readonly IGenericRepository<Friend> _repo;
         private readonly IMapper _mapper;
-        public FriendsController(IGenericRepository<Friend> friendRepo, IMapper mapper)
+        private readonly ILogger<FriendsController> _logger;
+        public FriendsController(IGenericRepository<Friend> friendRepo, IMapper mapper, ILogger<FriendsController> logger)
         {
             _mapper = mapper;
             _repo = friendRepo;
+            _logger = logger;
         }
 
         [HttpGet("{userId}")]
         public async Task<ActionResult<IReadOnlyList<FriendToReturnDto>>> GetFriends(int userId, [FromQuery] BaseSpecParams friendsSpecParams)
         {
+            _logger.LogInformation("logging get request for friends try again");
             var spec = new FriendsWithUsersSpecification(userId, friendsSpecParams);
             var friends = await _repo.ListAsync(spec);
 

@@ -29,3 +29,9 @@ Add new migrations (in root): `dotnet ef migrations add InitialCreate -p Infrast
 https://docs.microsoft.com/en-us/aspnet/core/security/authorization/secure-data?view=aspnetcore-6.0
 
 https://www.youtube.com/watch?v=3PyUjOmuFic
+
+`dotnet watch run`
+
+https://docs.microsoft.com/en-us/aspnet/signalr/overview/guide-to-the-api/hubs-api-guide-server
+
+If Omnisharp stops suggesting: `https://stackoverflow.com/questions/29975152/intellisense-not-automatically-working-vscode` or `https://www.youtube.com/watch?v=KJYrRv9cShY`
