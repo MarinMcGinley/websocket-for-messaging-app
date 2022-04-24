@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication;
 using Infrastructure.Data;
 using API.Helpers;
 using API.Middleware;
 using API.Extensions;
 using API.Hubs;
-using System;
 
 namespace API
 {
@@ -21,12 +21,17 @@ namespace API
         {
             services.AddAutoMapper(typeof(MappingProfiles));
             services.AddControllers();
+
             services.AddApplicationServices();
             services.AddSwaggerDocumentation(); 
             services.AddDbContext<UserContext>(x => x.UseSqlite(_config.GetConnectionString("DefaultConnection")));
             services.AddCors(opt => {
                 opt.AddPolicy("CorsPolicy", policy => {
-                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:5001", "null"); // ATT!! remove null before production
+                    policy
+                        .WithOrigins("http://localhost:3000", "https://localhost:3000", "https://localhost:5001", "null") // ATT!! remove null before production
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials(); 
                 });
             });
             services.AddSignalR();
@@ -49,15 +54,9 @@ namespace API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<MessagingHub>("/messaginghub");
+                endpoints.MapHub<MessagingHub>("/messagingHub");
 
             });
-
-            // app.UseSignalR(endpoints => {
-            //     endpoints.MapHub<MessagingHub>("/messaginghub");
-            // });
-
-            // app.MapHub<MessagingHub>("/messaginghub");
         }
     }
 }
