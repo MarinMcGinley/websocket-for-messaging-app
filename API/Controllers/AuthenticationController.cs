@@ -32,29 +32,7 @@ namespace API.Controllers
         }
 
         [HttpPost("signin")]
-        public async Task<ActionResult> SignIn(Credential userInfo) {
-            // _logger.LogInformation("signing in");
-            // _logger.LogInformation(JsonSerializer.Serialize(userInfo));
-            // // var user = new IdentityUser { Email = userInfo.Email };
-            // // var result = await UserManager.CreateAsync(user, userInfo.Password);
-            // // var signinResults = await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: true);
-            // // _logger.LogInformation(JsonSerializer.Serialize(signinResults));
-
-            // var userStore = new UserStore<IdentityUser>();
-            // var userManager = new UserManager<IdentityUser>(userStore);
-            // var user = userManager.Find(userInfo.Email, userInfo.Password);
-            // if (user != null) {
-            //     var authenticationManager = HttpContext.Current.GetOwinContext().Authentication;
-            //     var userIdentity = userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
-
-            //     authenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = false }, userIdentity);
-            //     _logger.LogInformation("Able to sign user in!!");
-            // }
-            return Ok();
-        }
-
-        [HttpPost("second-signin")]
-        public async Task<ActionResult> SecondSignIn([FromBody] Credential credential) {
+        public async Task<ActionResult> SignIn([FromBody] Credential credential) {
             var spec = new UsersFromCredentialSpecification(credential);
             var user = await _repo.GetEntityWithSpec(spec);
 
