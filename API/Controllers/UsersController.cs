@@ -5,9 +5,11 @@ using Core.Entities;
 using Core.Interfaces;
 using Core.Specifications;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
+    [Authorize]
     public class UsersController : BaseApiController
     {
         private readonly IGenericRepository<User> _repo;
@@ -17,6 +19,7 @@ namespace API.Controllers
             _mapper = mapper;
             _repo = repo;
         }
+
 
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<UserToReturnDto>>> GetUsers([FromQuery]BaseSpecParams userSpecParams)

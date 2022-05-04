@@ -36,4 +36,13 @@ https://docs.microsoft.com/en-us/aspnet/signalr/overview/guide-to-the-api/hubs-a
 
 If Omnisharp stops suggesting: `https://stackoverflow.com/questions/29975152/intellisense-not-automatically-working-vscode` or `https://www.youtube.com/watch?v=KJYrRv9cShY`
 
-Authentication:  `https://endjin.com/blog/2022/03/adding-authentication-and-authorisation-to-aspnet-core-web-applications`
+Authentication:  `https://docs.microsoft.com/en-us/aspnet/web-api/overview/security/authentication-and-authorization-in-aspnet-web-api`
+
+https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-6.0&tabs=visual-studio
+
+https://docs.microsoft.com/en-us/aspnet/identity/overview/getting-started/introduction-to-aspnet-identity
+
+https://docs.microsoft.com/en-us/previous-versions/visualstudio/dn253016(v=vs.111)?redirectedfrom=MSDN
+
+
+Microsoft.AspNetCore.HttpExtensions
