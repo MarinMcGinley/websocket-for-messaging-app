@@ -16,24 +16,37 @@ using Core.Specifications.UserSpecifications;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
+using Core.Interfaces;
 
 namespace API.Controllers
 {
     public class AuthenticationController : BaseApiController
     {
         private readonly ILogger<AuthenticationController> _logger;
+        private readonly IAuthenticationHelpers _authHelpers;
         private readonly IGenericRepository<User> _repo;
         private readonly IConfiguration _configuration;
 
-        public AuthenticationController(IGenericRepository<User> repo, IConfiguration configuration, ILogger<AuthenticationController> logger) {
+        public AuthenticationController(
+            IGenericRepository<User> repo, 
+            IConfiguration configuration, 
+            ILogger<AuthenticationController> logger,
+            IAuthenticationHelpers authHelpers
+        ) {
             _configuration = configuration;
             _repo = repo;
             _logger = logger;
+            _authHelpers = authHelpers;
         }
 
         [HttpPost("signin")]
         public async Task<ActionResult> SignIn([FromBody] Credential credential) {
-            var spec = new UsersFromCredentialSpecification(credential);
+            string hashedPassword = _authHelpers.GenerateHash(credential.Password);
+
+            var spec = new UsersFromCredentialSpecification(new Credential(
+                Email: credential.Email,
+                Password: hashedPassword
+            ));
             var user = await _repo.GetEntityWithSpec(spec);
 
             if (user == null) {
@@ -50,25 +63,10 @@ namespace API.Controllers
             var expiresAtTime = DateTime.UtcNow.AddMinutes(5);
              
             return Ok(new {
-                accessToken = CreateToken(claims, expiresAtTime),
+                accessToken = _authHelpers.CreateToken(claims, expiresAtTime),
                 expiresAt = expiresAtTime
             });
 
-        }
-
-        private string CreateToken(IEnumerable<Claim> claims, DateTime expiresIn) {
-            var secretKey = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("SecretKey"));
-            var jwt = new JwtSecurityToken(
-                claims: claims,
-                notBefore: DateTime.UtcNow,
-                expires: expiresIn,
-                signingCredentials: new SigningCredentials(
-                    new SymmetricSecurityKey(secretKey),
-                    SecurityAlgorithms.HmacSha256Signature
-                )
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
     }
 }

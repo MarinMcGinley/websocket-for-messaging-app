@@ -2,9 +2,7 @@ Generate assets:  `shift` + `command` + `p` => `.NET: Generate Assets For Build 
 
 Find version: `dotnet info`
 
-After getting a nuget package (no neccesary with vs code): `dotnet restore`
-
-Build migration (inside API): `dotnet ef migrations add InitialCreate  -o Data/Migrations`
+After getting a nuget package (not neccesary with vs code): `dotnet restore`
 
 Update database (inside API): `dotnet ef database update` -> this will produce the `websocket.db` file in the root of the project.
 

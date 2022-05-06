@@ -9,7 +9,9 @@ namespace Infrastructure.Data.Config
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.Property(p => p.Email).IsRequired().HasMaxLength(100);
-            builder.Property(p => p.Name).IsRequired().HasMaxLength(100);
+            builder.HasIndex(p => p.Email).IsUnique();
+            builder.Property(p => p.FirstName).IsRequired().HasMaxLength(100);
+            builder.Property(p => p.LastName).IsRequired().HasMaxLength(100);
             builder.Property(p => p.Password).IsRequired().HasMaxLength(50);
         }
     }

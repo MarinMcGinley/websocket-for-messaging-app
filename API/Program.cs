@@ -14,6 +14,8 @@ namespace API
                 try {
                     var context = services.GetRequiredService<UserContext>();
                     await context.Database.MigrateAsync();
+                    var logger = loggerFactory.CreateLogger<Program>();
+                    logger.LogInformation("Database successfully migrated");
                 } catch (Exception ex) {
                     var logger = loggerFactory.CreateLogger<Program>();
                     logger.LogError(ex, "An error occured during migration");
