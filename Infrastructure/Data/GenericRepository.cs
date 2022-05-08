@@ -2,6 +2,7 @@ using Core.Entities;
 using Core.Interfaces;
 using Core.Specifications;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Infrastructure.Data
 {
@@ -17,6 +18,12 @@ namespace Infrastructure.Data
         {
             await _context.AddAsync<T>(entity);
             return _context.SaveChanges();
+        }
+
+        public async Task<EntityEntry<T>> UpdateEntity(T entity) {
+            var entityEntry = _context.Update<T>(entity);
+            _context.SaveChanges();
+            return entityEntry;
         }
 
         public async Task<T> GetByIdAsync(int id)

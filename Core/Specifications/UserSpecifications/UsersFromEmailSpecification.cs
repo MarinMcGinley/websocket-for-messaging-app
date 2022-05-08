@@ -6,7 +6,7 @@ namespace Core.Specifications
     public class UsersFromEmailSpecification : BaseSpecification<User>
     {
 
-        public UsersFromEmailSpecification(string email) : base(user => user.Email == email)
+        public UsersFromEmailSpecification(string email, int userId) : base(user => user.Email == email && user.Id != userId)
         {
         }
     }

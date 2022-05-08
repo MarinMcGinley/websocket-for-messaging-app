@@ -21,6 +21,15 @@ namespace Infrastructure.Data
 
         }
 
+        public Boolean DoesUserHaveAccess(ClaimsIdentity identity, int Id) {
+            // var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity == null) return false;
+
+            if (Id.ToString() == identity.FindFirst("UserId").Value) return true;
+
+            return false;
+        }
+
         public string CreateToken(IEnumerable<Claim> claims, DateTime expiresIn) {
             var secretKey = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("SecretKey"));
             var jwt = new JwtSecurityToken(

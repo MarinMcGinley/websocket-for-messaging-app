@@ -1,5 +1,7 @@
 using Core.Entities;
 using Core.Specifications;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Core.Interfaces
 {
@@ -10,5 +12,6 @@ namespace Core.Interfaces
          Task<T> GetEntityWithSpec(ISpecification<T> spec);
          Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec);
          Task<int> CreateEntity(T entity);
+         Task<EntityEntry<T>> UpdateEntity(T entity);
     }
 }
