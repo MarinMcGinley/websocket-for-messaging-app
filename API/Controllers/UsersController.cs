@@ -5,18 +5,30 @@ using Core.Entities;
 using Core.Interfaces;
 using Core.Specifications;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
+    [Authorize]
     public class UsersController : BaseApiController
     {
         private readonly IGenericRepository<User> _repo;
         private readonly IMapper _mapper;
-        public UsersController(IGenericRepository<User> repo, IMapper mapper)
-        {
+        private readonly ILogger<UsersController> _logger;
+        private readonly IAuthenticationHelpers _authHelpers;
+
+        public UsersController(
+            IGenericRepository<User> repo, 
+            IMapper mapper, 
+            ILogger<UsersController> logger,
+            IAuthenticationHelpers authHelpers
+        ) {
+            _logger = logger;
+            _authHelpers = authHelpers;
             _mapper = mapper;
             _repo = repo;
         }
+
 
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<UserToReturnDto>>> GetUsers([FromQuery]BaseSpecParams userSpecParams)
@@ -47,7 +59,6 @@ namespace API.Controllers
             if (user == null) return NotFound(new ApiResponse(404));
 
             return Ok(_mapper.Map<User, UserToReturnDto>(user));
-
         }
 
         [HttpGet("find")]
@@ -57,14 +68,27 @@ namespace API.Controllers
             var users = await _repo.ListAsync(spec);
 
             return Ok(_mapper.Map<IReadOnlyList<User>, IReadOnlyList<UserToReturnDto>>(users));
-
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult<int>> CreateUser(User user)
         {
-            await _repo.CreateEntity(user);
-            return Ok();
+            try {
+                string hashedPassword = _authHelpers.GenerateHash(user.Password);
+
+                await _repo.CreateEntity(new User(
+                    Email: user.Email,
+                    Password: hashedPassword,
+                    FirstName: user.FirstName,
+                    LastName: user.LastName
+                ));
+                return Ok();
+            } catch (Exception ex) {
+                _logger.LogError(ex, "Unable to create user");
+                return new BadRequestObjectResult(new ApiResponse(400, "A user with this email already exists"));
+            }
+            
         }
 
     }

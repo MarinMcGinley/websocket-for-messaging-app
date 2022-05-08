@@ -11,7 +11,8 @@ namespace API.Helpers
             CreateMap<User, UserToReturnDto>();
             CreateMap<Friend, FriendToReturnDto>()
                 .ForMember(d => d.Id, o => o.MapFrom(s => s.UserId))
-                .ForMember(d => d.Name, o => o.MapFrom(s => s.User.Name))
+                .ForMember(d => d.FirstName, o => o.MapFrom(s => s.User.FirstName))
+                .ForMember(d => d.LastName, o => o.MapFrom(s => s.User.LastName))
                 .ForMember(d => d.Email, o => o.MapFrom(s => s.User.Email));
             CreateMap<Message, MessageToReturnDto>();
         }

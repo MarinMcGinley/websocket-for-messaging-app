@@ -2,9 +2,7 @@ Generate assets:  `shift` + `command` + `p` => `.NET: Generate Assets For Build 
 
 Find version: `dotnet info`
 
-After getting a nuget package (no neccesary with vs code): `dotnet restore`
-
-Build migration (inside API): `dotnet ef migrations add InitialCreate  -o Data/Migrations`
+After getting a nuget package (not neccesary with vs code): `dotnet restore`
 
 Update database (inside API): `dotnet ef database update` -> this will produce the `websocket.db` file in the root of the project.
 
@@ -35,3 +33,14 @@ https://www.youtube.com/watch?v=3PyUjOmuFic
 https://docs.microsoft.com/en-us/aspnet/signalr/overview/guide-to-the-api/hubs-api-guide-server
 
 If Omnisharp stops suggesting: `https://stackoverflow.com/questions/29975152/intellisense-not-automatically-working-vscode` or `https://www.youtube.com/watch?v=KJYrRv9cShY`
+
+Authentication:  `https://docs.microsoft.com/en-us/aspnet/web-api/overview/security/authentication-and-authorization-in-aspnet-web-api`
+
+https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-6.0&tabs=visual-studio
+
+https://docs.microsoft.com/en-us/aspnet/identity/overview/getting-started/introduction-to-aspnet-identity
+
+https://docs.microsoft.com/en-us/previous-versions/visualstudio/dn253016(v=vs.111)?redirectedfrom=MSDN
+
+
+Microsoft.AspNetCore.HttpExtensions
