@@ -10,5 +10,7 @@ namespace Core.Interfaces
     {
         string CreateToken(IEnumerable<Claim> claims, DateTime expiresIn);
         string GenerateHash(String password);
+
+        Boolean DoesUserHaveAccess(ClaimsIdentity identity, int Id);
     }
 }

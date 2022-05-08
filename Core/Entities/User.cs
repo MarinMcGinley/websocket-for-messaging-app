@@ -16,6 +16,16 @@ namespace Core.Entities
             this.LastName = LastName;
         }
 
+        public User(
+            int Id,
+            string FirstName,
+            string LastName
+        ) {
+            this.Id = Id;
+            this.FirstName = FirstName;
+            this.LastName = LastName;
+        }
+
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
         [DataType(DataType.Password)]
