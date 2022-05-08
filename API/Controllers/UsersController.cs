@@ -6,6 +6,8 @@ using Core.Interfaces;
 using Core.Specifications;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using System.Text.Json;
+using System.Security.Claims;
 
 namespace API.Controllers
 {
@@ -33,10 +35,18 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<UserToReturnDto>>> GetUsers([FromQuery]BaseSpecParams userSpecParams)
         {
-            var spec = new UsersPaginatedSpecification(userSpecParams);
-            var users = await _repo.ListAsync(spec);
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
 
-            return Ok(_mapper.Map<IReadOnlyList<User>, IReadOnlyList<UserToReturnDto>>(users));
+            try {
+                int userId = Int32.Parse(identity.FindFirst("UserId").Value);
+
+                var spec = new UsersPaginatedSpecification(userSpecParams, userId);
+                var users = await _repo.ListAsync(spec);
+
+                return Ok(_mapper.Map<IReadOnlyList<User>, IReadOnlyList<UserToReturnDto>>(users));
+            } catch (Exception ex) {
+                return new UnauthorizedObjectResult(new ApiResponse(401, "Faulty token"));
+            }
         }
 
         [HttpGet("{id}")]
@@ -53,21 +63,37 @@ namespace API.Controllers
         [HttpGet("email/{email}")]
         public async Task<ActionResult<UserToReturnDto>> GetUserFromEmail(string email)
         {
-            var spec = new UsersFromEmailSpecification(email);
-            var user = await _repo.GetEntityWithSpec(spec);
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
 
-            if (user == null) return NotFound(new ApiResponse(404));
+            try {
+                int userId = Int32.Parse(identity.FindFirst("UserId").Value);
 
-            return Ok(_mapper.Map<User, UserToReturnDto>(user));
+                var spec = new UsersFromEmailSpecification(email, userId);
+                var user = await _repo.GetEntityWithSpec(spec);
+
+                if (user == null) return NotFound(new ApiResponse(404));
+                return Ok(_mapper.Map<User, UserToReturnDto>(user));
+            } catch (Exception ex) {
+                return new UnauthorizedObjectResult(new ApiResponse(401, "Faulty token"));
+            }
         }
 
         [HttpGet("find")]
         public async Task<ActionResult<IReadOnlyList<UserToReturnDto>>> FindUsers([FromQuery]UserSpecParams userSpecParams)
         {
-            var spec = new UsersFromSearchStringSpecification(userSpecParams);
-            var users = await _repo.ListAsync(spec);
 
-            return Ok(_mapper.Map<IReadOnlyList<User>, IReadOnlyList<UserToReturnDto>>(users));
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+
+            try {
+                int userId = Int32.Parse(identity.FindFirst("UserId").Value);
+
+                var spec = new UsersFromSearchStringSpecification(userSpecParams, userId);
+                var users = await _repo.ListAsync(spec);
+
+                return Ok(_mapper.Map<IReadOnlyList<User>, IReadOnlyList<UserToReturnDto>>(users));
+            } catch (Exception ex) {
+                return new UnauthorizedObjectResult(new ApiResponse(401, "Faulty token"));
+            }
         }
 
         [AllowAnonymous]
@@ -91,5 +117,31 @@ namespace API.Controllers
             
         }
 
+        [HttpPatch("{id}")]
+        public async Task<ActionResult> UpdateUser(int id, [FromBody] UserToPatch user) {
+            try {
+                _logger.LogInformation(JsonSerializer.Serialize(user));
+                var userInDB = await _repo.GetByIdAsync(id);
+
+                if (userInDB == null) {
+                    return NotFound(new ApiResponse(404));
+                }
+
+                if (!_authHelpers.DoesUserHaveAccess(HttpContext.User.Identity as ClaimsIdentity, id)) {
+                    return new UnauthorizedObjectResult(new ApiResponse(401, "You cannot update other users"));
+                }
+                
+                if (user.FirstName != null) userInDB.FirstName = user.FirstName;
+                if (user.LastName != null) userInDB.LastName = user.LastName;
+
+                var results = await _repo.UpdateEntity(userInDB);
+
+                var updatedUser = await _repo.GetByIdAsync(id);
+                return Ok(updatedUser);
+            } catch (Exception ex) {
+                _logger.LogError(ex, "Unable to update user");
+                return new BadRequestObjectResult(new ApiResponse(400, "Unable to update user"));
+            }
+        }
     }
 }

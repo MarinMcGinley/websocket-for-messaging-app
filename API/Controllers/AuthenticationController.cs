@@ -57,10 +57,13 @@ namespace API.Controllers
             _logger.LogInformation("user with password exists");
 
             var claims = new List<Claim> {
-                new Claim(ClaimTypes.Email, user.Email)
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim("UserId", user.Id.ToString())
             };
 
-            var expiresAtTime = DateTime.UtcNow.AddMinutes(5);
+            
+
+            var expiresAtTime = DateTime.UtcNow.AddMinutes(60);
              
             return Ok(new {
                 accessToken = _authHelpers.CreateToken(claims, expiresAtTime),
